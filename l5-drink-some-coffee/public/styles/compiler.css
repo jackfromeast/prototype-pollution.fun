@@ -1,0 +1,70 @@
+h1 {
+	font-family:"Josefin Slab";
+	font-weight:300;
+	font-size: 50px;
+}
+
+h2 {
+	font-family:"Josefin Slab";
+	font-weight:300;
+	font-size: 30px;
+}
+
+body {
+	font-family: 'Roboto',sans-serif;
+	font-weight: 300;
+	text-align: left;
+	background-color: rgb(158,133,60,0.7);
+	color: white;
+}
+
+#editor{
+	text-align: left
+}
+
+#adminButton {
+	background-color: #3498db;
+	color: #ffffff;
+	padding: 20px 20px;
+	font-size: 24px;
+	border: none;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	/* margin-top: 10px; */
+}
+
+#adminButton:hover {
+	background-color: #2980b9;
+}
+
+.iconWrapper {
+    position: absolute;
+    left: 0;
+    top: 10%; 
+    width: 100%;
+    /* overflow: hidden; */
+}
+
+#coffeeIcon {
+    position: absolute;
+	z-index: 1000;  /* High value to ensure it's on top */
+    width: 50px; /* Or whatever size you want */
+	/* top: 5%; */
+    left: -50px; /* Start off the screen */
+    animation: linearMovement 10s infinite linear;
+}
+
+/* Keyframes for linear movement */
+@keyframes linearMovement {
+    0% {
+        left: -50px;
+    }
+    100% {
+        left: 100vw;
+    }
+}
+
+body, html {
+    overflow: visible;
+}
