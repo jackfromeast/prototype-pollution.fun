@@ -9,6 +9,6 @@ RUN chown -R 1337 /home/user/*
 WORKDIR /home/user/
 RUN npm ci --only=production --omit=dev
 RUN npm install 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update
 
 CMD ["sh", "start.sh"]
