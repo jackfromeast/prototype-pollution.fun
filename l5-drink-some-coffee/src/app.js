@@ -5,6 +5,7 @@ const helper = require('underscore-keypath')
 const jwt = require('jsonwebtoken');
 const adminVisit = require('./admin-bot')
 
+
 const path = require('path');
 const { resourceUsage } = require('process');
 const PORT = 8399;
@@ -13,6 +14,15 @@ const app = express();
 
 const SECRET_KEY = "THIS_IS_A_SECRET_KEY"; 
 var log = {}
+
+/**
+ * Create a hardcopy of the original prototype
+ */
+const ORIGIN_PROTOTYPE = Object.create(null);
+Object.getOwnPropertyNames(Object.prototype).forEach((prop) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Object.prototype, prop);
+    Object.defineProperty(ORIGIN_PROTOTYPE, prop, descriptor);
+});
 
 app.use(bodyParser.json());
 app.use(express.static('public')); 
@@ -91,7 +101,20 @@ app.get('/coffee', (req, res) => {
 
 app.get('/admin', (req, res) => {
     adminVisit();
-    res.send('Admin will take a look!');
+    res.send('Admin will take a look sooon!');
+})
+
+/**
+ * Reset the Prototype
+ * In case you mess up the prototype :/
+ */
+app.get('/reset', (req, res) => {
+    Object.getOwnPropertyNames(Object.prototype).forEach((prop) => {
+        if(prop in ORIGIN_PROTOTYPE === false){
+            delete Object.prototype[prop]
+        }
+    });
+    res.send('Prototype has been reset :>')
 })
 
 app.listen(PORT, () => {

@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 async function adminVisit() {
     const browser = await puppeteer.launch({ 
         headless: "new", 
-        args: ['--disable-web-security']});
+        args: ['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox']});
     const page = await browser.newPage();
 
     await page.setRequestInterception(true);
@@ -22,7 +22,7 @@ async function adminVisit() {
     
     // Adjusted XPath to target the password input field instead of a label
     const pass = await page.waitForXPath('/html/body/main/section/form/input[2]'); 
-    await pass.type('flag{prototype_pollution_2_XSS_!!!}'); // flag{REDACTED}
+    await pass.type('ppfun{prototype_pollution_2_XSS_!!!}'); // flag{REDACTED}
 
     const submitButton = await page.waitForXPath('/html/body/main/section/form/button');
     submitButton.click();
