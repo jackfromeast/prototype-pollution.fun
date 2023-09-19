@@ -1,5 +1,5 @@
---- /home/ubuntu/websec-hw3/babyproto2/node_modules/squirrelly/dist/squirrelly.cjs.js	2023-08-21 02:45:50.649987172 +0000
-+++ /home/ubuntu/websec-hw3/babyproto2-renvenge/node_modules/squirrelly/dist/squirrelly.cjs.js	2023-08-21 02:46:08.557988853 +0000
+--- babyproto2/node_modules/squirrelly/dist/squirrelly.cjs.js	2023-08-21 02:45:50.649987172 +0000
++++ babyproto2-renvenge/node_modules/squirrelly/dist/squirrelly.cjs.js	2023-08-21 02:46:08.557988853 +0000
 @@ -579,7 +579,7 @@
              // }
              // Let compiler do this

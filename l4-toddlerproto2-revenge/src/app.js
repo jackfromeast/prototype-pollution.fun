@@ -4,6 +4,16 @@ const bodyParser = require('body-parser');
 const fs = require('fs')
 const app = express();
 
+/**
+ * Create a hardcopy of the original prototype
+ */
+const ORIGIN_PROTOTYPE = Object.create(null);
+Object.getOwnPropertyNames(Object.prototype).forEach((prop) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Object.prototype, prop);
+    Object.defineProperty(ORIGIN_PROTOTYPE, prop, descriptor);
+});
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/static', express.static(__dirname + '/public'));
@@ -82,15 +92,34 @@ app.post('/add', (req, res) => {
     res.send("Added!")
 })
 
+
 /**
  * Can you touch a file on the server?
  */
 app.get('/flag', (req, res) => {
     if(fs.existsSync('touch.txt')){
-        res.send('flag{h0w_did_y0u_find_this_chained_gadget}')
+        fs.readFile('./flag', 'utf8', (err, flag) => {
+            if (err) {
+              res.send('Did you delete the flag?')
+            }
+            res.send(flag)
+          });
     }else{
         res.send('Nice Try!')
     }
+})
+
+/**
+ * Reset the Prototype
+ * In case you mess up the prototype :/
+ */
+app.get('/reset', (req, res) => {
+    Object.getOwnPropertyNames(Object.prototype).forEach((prop) => {
+        if(prop in ORIGIN_PROTOTYPE === false){
+            delete Object.prototype[prop]
+        }
+    });
+    res.send('Prototype has been reset :>')
 })
 
 const PORT = process.env.PORT || 8399;
