@@ -48,7 +48,7 @@ var downloadCompiledFile = function() {
 
 
 function fetchAdminData() {
-    fetch('/admin')
+    fetch(`/admin?url=${window.location.origin}/`)
     .then(response => response.text())
     .then(data => {
         document.getElementById('adminData').innerText = data;

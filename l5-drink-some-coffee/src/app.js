@@ -3,9 +3,7 @@ const bodyParser = require('body-parser');
 const CoffeeScript = require('coffeescript');
 const helper = require('underscore-keypath')
 const jwt = require('jsonwebtoken');
-const adminVisit = require('./admin-bot')
-
-
+const axios = require('axios');
 const path = require('path');
 const { resourceUsage } = require('process');
 const PORT = 8399;
@@ -14,6 +12,11 @@ const app = express();
 
 const SECRET_KEY = "THIS_IS_A_SECRET_KEY"; 
 var log = {}
+
+app.use((err, req, res, next) => {
+    console.log(err);
+    process.exit(1);
+});
 
 /**
  * Create a hardcopy of the original prototype
@@ -81,6 +84,7 @@ app.post('/coffee-compiler', verifyToken, (req, res) => {
 
         try {
             let code = req.body.code;
+            code = code.replace(/[\n\t]+$/, '');
             if(code==="# Functions:\nsquare = (x) -> x * x"){
                 // I am pretty confident that the default code is safe
                 // It won't cause any reflected XSS, isn't?
@@ -99,9 +103,22 @@ app.get('/coffee', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'pages', 'compiler.html'))    
 });
 
+
+
 app.get('/admin', (req, res) => {
-    adminVisit();
-    res.send('Admin will take a look sooon!');
+    url = req.query.url;
+    axios.get(`http://admin-bot.kubectf-management.svc.cluster.local/admin?url=${url}`)
+    .then(function (response) {
+        if(response.data === "Request accepted!"){
+            res.send('Admin will take a look sooon!');
+        }else{
+            res.send('Wrong format! Admin will not take a look :<');
+        }
+    })
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    });
 })
 
 /**

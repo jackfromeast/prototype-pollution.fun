@@ -8,6 +8,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/static', express.static(__dirname + '/public'));
 
+app.use((err, req, res, next) => {
+    process.exit(1);
+});
+
 /**
  * Create a hardcopy of the original prototype
  */
@@ -34,11 +38,13 @@ function isObject(item) {
  * @returns 
  */
 function deepMerge(target, source) {
-    let output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
         for (let key in source){
             if(source.hasOwnProperty(key)){
                 if(isObject(source[key])){
+                    if(!target[key]){
+                        target[key] = Object.create({})
+                    }
                     deepMerge(target[key], source[key])
                 }else{
                     target[key] = source[key]
@@ -46,7 +52,6 @@ function deepMerge(target, source) {
             }
         }
     }
-    return output;
 }
 
 /**

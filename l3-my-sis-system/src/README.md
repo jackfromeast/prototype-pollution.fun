@@ -4,6 +4,8 @@ Welcome to the world of pollution!
 
 > Like all pollution, prototype pollution leads to real problems!
 
+Have you heard of the SIS system? I prefer the ![ION](https://en.wikipedia.org/wiki/Ion_(serialization_format)) format over JSON, so I created a login page using my own implementation. Can you get the flag?
+
 In this level, you are required to `exploit` the prototype pollution vulnerability in order to escalate the consequence from DoS to something more exciting like Remote Code Execution (RCE).
 
 Hints to Aid Your Quest:

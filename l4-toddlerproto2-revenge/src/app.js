@@ -13,6 +13,9 @@ Object.getOwnPropertyNames(Object.prototype).forEach((prop) => {
     Object.defineProperty(ORIGIN_PROTOTYPE, prop, descriptor);
 });
 
+app.use((err, req, res, next) => {
+    process.exit(1);
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -39,12 +42,13 @@ function isObject(item) {
  * @returns 
  */
 function deepMerge(target, source) {
-    let output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
         for (let key in source){
             if(source.hasOwnProperty(key)){
                 if(isObject(source[key])){
-                    if(!isObject(target[key])){target[key]={}};
+                    if(!target[key]){
+                        target[key] = Object.create({})
+                    }
                     deepMerge(target[key], source[key])
                 }else{
                     target[key] = source[key]
@@ -52,7 +56,6 @@ function deepMerge(target, source) {
             }
         }
     }
-    return output;
 }
 
 /**
