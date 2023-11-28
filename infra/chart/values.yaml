@@ -1,0 +1,80 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+kube-janitor:
+  quota:
+    limits:
+      memory: 256Mi
+    requests:
+      cpu: 20m
+      memory: 256Mi
+
+challenge-manager:
+  replicas: 2
+  authSecret: keyboard-cat
+  containerSecret: keyboard-cat
+  registryPrefix: ghcr.io/downunderctf
+  quota:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 125m
+      memory: 256Mi
+
+landing:
+  replicas: 3
+  quota:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+admin-bot:
+  quota:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+# domain:
+#   challenges: chal.example.com
+#   management: management.example.com
+
+# # google project ID
+# googleProject: example
+# googleRegion: australia-southeast1
+# googleRepositoryName: example
+
+# cert:
+#   email: email@example.com
+#   cfDNSToken: example
+
+# # Don't change these unless you know what you're doing
+# challengeNamespaces:
+#   - challenges
+#   - challenges-isolated
+
+domain:
+  challenges: chal.prototype-pollution.fun
+  management: manage.prototype-pollution.fun
+  adminbot: admin-bot.prototype-pollution.fun
+  
+# google project ID
+googleProject: prototype-pollution-fun
+googleRegion: us-central1
+googleRepositoryName: ppfun
+
+cert:
+  email: thisiszhengyu@gmail.com
+  cfDNSToken: REDACTED{Your Cloudflare API Token}
+
+# Don't change these unless you know what you're doing
+challengeNamespaces:
+  - challenges
+  - challenges-isolated

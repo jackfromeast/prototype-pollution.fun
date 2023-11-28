@@ -1,0 +1,62 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-bot
+  namespace: {{ .Release.Name }}-management
+  labels:
+    role: admin-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: admin-bot
+  template:
+    metadata:
+      labels:
+        role: admin-bot
+    spec:
+      enableServiceLinks: false
+      automountServiceAccountToken: false
+      containers:
+      - name: web
+        image: {{ .Values.googleRegion }}-docker.pkg.dev/{{ .Values.googleProject }}/{{ .Values.googleRepositoryName }}/services/admin-bot:latest
+        resources:
+{{ toYaml (index  .Values "admin-bot").quota | indent 10 }}
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-bot
+  namespace: {{ .Release.Name }}-management
+  labels:
+    role: admin-bot
+spec:
+  selector:
+    role: admin-bot
+  ports:
+    - port: 80
+---
+# default ingressroute
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: admin-bot
+  namespace: {{ .Release.Name }}-management
+spec:
+  entryPoints:
+    - web
+    - websecure
+  tls:
+    secretName: {{ .Release.Name }}-cert-adminbot
+  routes:
+    - match: Host(`{{ .Values.domain.adminbot }}`)
+      kind: Rule
+      priority: 10
+      middlewares:
+      - name: hsts
+      services:
+      - name: admin-bot
+        port: 80

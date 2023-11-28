@@ -1,0 +1,59 @@
+#!/bin/bash
+
+source `dirname "$0"`"/util"
+
+# set -e
+
+# PROJECT_ID=`gcloud config get-value project`
+PROJECT_ID="prototype-pollution-fun"
+# CLUSTER_NAME="ctf-cluster"
+# CLUSTER_REGION="us-central1-a"
+# CLUSTER_VERSION="1.27.3-gke.100"
+CLUSTER_NAME="ctf-cluster"
+CLUSTER_REGION="us-east5-a"
+CLUSTER_VERSION="1.27.3-gke.100"
+MACHINE_TYPE="e2-medium"
+DISK_SIZE="40"
+DISK_TYPE="pd-standard"
+NUM_NODES="8"
+# VPC_NAME="ductf-network"
+
+CLUSTER_NAME=`ask_with_default "Cluster Name" "$CLUSTER_NAME"`
+CLUSTER_REGION=`ask_with_default "Cluster Zone" "$CLUSTER_REGION"`
+CLUSTER_VERSION=`ask_with_default "Cluster Version" "$CLUSTER_VERSION"`
+MACHINE_TYPE=`ask_with_default "Machine Type" "$MACHINE_TYPE"`
+DISK_SIZE=`ask_with_default "Disk Size (GB)" "$DISK_SIZE"`
+DISK_TYPE=`ask_with_default "Disk Type (pd-standard or pd-ssd)" "$DISK_TYPE"`
+NUM_NODES=`ask_with_default "Number of Nodes" "$NUM_NODES"`
+# VPC_NAME=`ask_with_default "VPC to create" "$VPC_NAME"`
+
+gcloud services enable compute.googleapis.com
+gcloud services enable container.googleapis.com
+
+# gcloud compute networks create $VPC_NAME --subnet-mode=auto
+
+gcloud beta container clusters create "$CLUSTER_NAME" \
+  --zone "$CLUSTER_REGION" \
+  --no-enable-basic-auth \
+  --cluster-version "$CLUSTER_VERSION" \
+  --release-channel "regular" \
+  --machine-type "$MACHINE_TYPE" \
+  --image-type "cos_containerd" \
+  --disk-type "$DISK_TYPE" \
+  --disk-size "$DISK_SIZE" \
+  --metadata disable-legacy-endpoints=true \
+  --workload-pool="$PROJECT_ID.svc.id.goog" \
+  --workload-metadata=GKE_METADATA \
+  --scopes "https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append" \
+  --num-nodes "$NUM_NODES" \
+  --enable-ip-alias \
+  --enable-network-policy \
+  --no-enable-master-authorized-networks \
+  --addons HorizontalPodAutoscaling,GcePersistentDiskCsiDriver \
+  --max-surge-upgrade 1 \
+  --max-unavailable-upgrade 0 \
+  --enable-shielded-nodes \
+  --location-policy BALANCED \
+  # --network ${VPC_NAME}
+
+gcloud container clusters --region "$CLUSTER_REGION" get-credentials "$CLUSTER_NAME"
